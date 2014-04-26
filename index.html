@@ -12,19 +12,40 @@
 
 		<link rel="stylesheet" href="style.css" type="text/css" media="all" />
 
-		<script src="particles.js" type="text/javascript" charset="utf-8"></script>
+		<script src="ImageLoader.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Particles.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Scenes.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Story.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Controls.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="lib/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="lib/underscore.js" type="text/javascript" charset="utf-8"></script>
+
 		<script type="text/javascript" charset="utf-8">
 			window.onload = function() {
 				p = new Particles({
 					screen: document.getElementById('screen'),
-					width: 1000,
-					height: 200
+					width: 1276,
+					height: 284
 				});
+
+				sc = new Scenes();
+
+				// TODO: Perhaps rename Game.js.
+				s = new Story ({
+					scenes: sc
+				});
+
+				c = new Controls ({
+					controls: document.getElementById('controls'),
+					story: s
+				});
+
 			};
 		</script>
     </head>
     <body>
 		<div id="screen"></div>
+		<div id="controls"></div>
 	</body>
 </html>

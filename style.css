@@ -1,4 +1,42 @@
+body {
+	margin-left: auto;
+	margin-right: auto;
+	width: 1292px;
+	background: -webkit-repeating-linear-gradient(#24365e, #14162e, #24365e);
+	line-height: 20px;
+}
+
 .nightBlueBackground {
 	background-color: #24365e;
 }
 
+#screen {
+	border: 8px solid #02143e;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	height: 284px;
+	top: 100px;
+}
+
+#controls {
+	color: #ccc;
+	position: relative;
+	background-color: black;
+	width: 1292px;
+	height: 300px;
+	top: 150px;
+	font-size: 1em;
+	padding: 1em;
+	padding-bottom: 2em;
+	overflow-y: scroll;
+}
+
+input {
+	border: 0;
+	background-color: black;
+	color: #ccc;
+	outline-width: 0;
+	font: 1em serif;
+	margin-left: 1em;
+}

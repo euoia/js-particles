@@ -1,22 +1,31 @@
 // Number of pixels to move per second.
-var gravity = 12;
+var gravity = 15;
 
-function Particle(x, y, radius) {
+function Particle(x, y, maxRadius) {
   this.x = x;
   this.y = y;
-  this.radius = radius;
+  this.radius = _.random(1, maxRadius);
   this.velocityModifier = Math.random() + 0.5;
 
   this.created = Date.now();
   this.lastUpdate = Date.now();
 
   this.red = 255;
-  this.blue = _.random(0, 255);
+  this.blue = _.random(200, 255);
   this.green = _.random(0, 255);
 
+  // Time before it disappears.
   this.lifeInSeconds = _.random(4, 12);
+
+  // Time it takes to fade out.
+  this.fadeOutInSeconds = _.random(0, 2);
+
+  this.__defineGetter__('deathTime', function() {
+    return this.created + (this.lifeInSeconds * 1000);
+  });
+
   this.__defineGetter__('isDead', function() {
-    if (Date.now() > this.created + (this.lifeInSeconds * 1000)) {
+    if (Date.now() > this.deathTime) {
       return true;
     }
 
@@ -37,42 +46,93 @@ Particle.prototype.getColour = function() {
     this.green.toString(16);
 };
 
+Particle.prototype.getOpacity = function() {
+  var now = Date.now();
+
+  if (now > this.deathTime) {
+    return 0;
+  }
+
+  var fadeOutStart = this.deathTime - (this.fadeOutInSeconds * 1000);
+
+  // Opacity should be continuous & linear over the fade out time.
+  // At start, opacity = 1. At end, opacity = 0.
+  if (now > fadeOutStart) {
+    var opacity = 1 - ((now - fadeOutStart) / (this.fadeOutInSeconds * 1000));
+    return opacity;
+  }
+
+  return 1;
+};
+
 function Particles(options) {
   this.screen = options.screen;
   this.width = options.width;
   this.height = options.height;
 
-  this.canvas = document.createElement('canvas');
-  this.ctx = this.canvas.getContext('2d');
-  this.screen.appendChild(this.canvas);
-
-
-  this.canvas.width = options.width;
-  this.canvas.height = options.height;
-  this.canvas.classList.add('nightBlueBackground');
-
+  // Array of particles.
   this.particles = [];
 
-  window.setInterval(
-    this.generateParticle.bind(this, 200, 150, 50, 1),
-    1000);
+  // Fire position.
+  this.firePosition = {x: 450, y: 200};
+  this.fireRadius = 120;
 
-  window.requestAnimationFrame(this.drawScene.bind(this));
+  // Particle size.
+  this.maxParticleRadius = 2;
+
+  // Drawing the scene layer.
+  this.sCanvas = document.createElement('canvas');
+  this.sCtx = this.sCanvas.getContext('2d');
+  this.screen.appendChild(this.sCanvas);
+
+  this.sCanvas.width = options.width;
+  this.sCanvas.height = options.height;
+  this.sCanvas.classList.add('nightBlueBackground');
+
+  // Drawing the particle layer.
+  this.pCanvas = document.createElement('canvas');
+  this.pCtx = this.pCanvas.getContext('2d');
+  this.screen.appendChild(this.pCanvas);
+
+  this.pCanvas.width = options.width;
+  this.pCanvas.height = options.height;
+  this.pCanvas.style.position = 'absolute';
+  this.pCanvas.style.top = '0';
+  this.pCanvas.style.left = '0';
+
+
+  this.imageLoader = new ImageLoader();
+  this.sceneImage = this.imageLoader.load('./scene-1-the-fireside.jpg');
+
+  // Set everything up.
+  this.imageLoader.done(function() {
+    this.sCtx.drawImage(this.sceneImage, 0, 0);
+
+    window.setInterval(
+      this.generateParticle.bind(
+        this,
+        this.firePosition.x,
+        this.firePosition.y,
+        this.fireRadius,
+        this.maxParticleRadius),
+      1000);
+
+    window.requestAnimationFrame(this.drawScene.bind(this));
+  }.bind(this));
 }
 
-Particles.prototype.generateParticle = function(x, y, areaRadius, particleRadius) {
-  console.log('Adding particle');
+Particles.prototype.generateParticle = function(x, y, areaRadius, maxParticleRadius) {
   var angle = _.random(360);
   var distanceFromCenter = _.random(areaRadius);
 
   var xOffset = Math.sin(angle) * distanceFromCenter;
   var yOffset = Math.cos(angle) * distanceFromCenter;
 
-  this.particles.push(new Particle(x + xOffset, y + yOffset, particleRadius));
+  this.particles.push(new Particle(x + xOffset, y + yOffset, maxParticleRadius));
 };
 
 Particles.prototype.drawScene = function() {
-  this.ctx.clearRect(0, 0, this.width, this.height);
+  this.pCtx.clearRect(0, 0, this.width, this.height);
 
   this.particles = _.where(this.particles, {isDead: false});
   _.map(this.particles, function (particle) {
@@ -84,14 +144,19 @@ Particles.prototype.drawScene = function() {
 };
 
 Particles.prototype.drawParticle = function(particle) {
-  this.ctx.fillStyle = particle.getColour();
-  // Rectangle.
-  this.ctx.fillRect(particle.x, particle.y, particle.radius, particle.radius);
+  this.pCtx.fillStyle = particle.getColour();
+  this.pCtx.globalAlpha = particle.getOpacity();
 
-  //this.ctx.beginPath();
-  //this.ctx.strokeStyle = '#f0ee75';
-  //this.ctx.lineWidth = 0;
-  //this.ctx.arc(x, y, 2, 0, 2 * Math.PI);
-  //this.ctx.fill();
-  //this.ctx.stroke();
+  // Rectangle.
+  this.pCtx.fillRect(particle.x, particle.y, particle.radius, particle.radius);
+
+  this.pCtx.globalAlpha = 1;
+
+  // Circle.
+  //this.pCtx.beginPath();
+  //this.pCtx.strokeStyle = '#f0ee75';
+  //this.pCtx.lineWidth = 0;
+  //this.pCtx.arc(x, y, 2, 0, 2 * Math.PI);
+  //this.pCtx.fill();
+  //this.pCtx.stroke();
 };
