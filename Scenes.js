@@ -12,7 +12,7 @@ Scene1.prototype.getOptions = function() {
   return {
     'Explore to the north': this.explore,
     'Stoke the fire': this.stoke,
-    'Go back into the house': this.goHouse
+    'Go into the house': this.goHouse
   };
 };
 
@@ -22,7 +22,7 @@ Scene1.prototype.getPrompt = function() {
 
 Scene1.prototype.explore = function(story) {
   story.transitionScene('tombos-body', [
-    "Jack hesistently wanders north towards luver's lane whence came the cry.",
+    "Jack hesistently wanders north towards Luver's Lane whence came the cry.",
     "Upon entering the field he discovers an awful sight.",
     "The bloodied and mangled corpse of Tombo.",
     "Tombo has been mauled by a creature. Probably a wolf."
@@ -34,13 +34,20 @@ Scene1.prototype.stoke = function(story) {
 };
 
 Scene1.prototype.goHouse = function(story) {
-  story.addStory("Jack leaves the warmth of the fire and goes back into the house...");
+  story.transitionScene(
+    'house',
+    [
+      "Jack leaves the warmth of the fire and goes back into the house...",
+      "This bit isn't done yet."
+    ]);
 };
 
 function SceneHouse () {
 }
 
 function SceneTombosBody () {
+  this.tomboBeenExamined = false;
+  this.tomboBeenSearched = false;
 }
 
 SceneTombosBody.prototype.getPrompt = function() {
@@ -48,10 +55,7 @@ SceneTombosBody.prototype.getPrompt = function() {
 };
 
 SceneTombosBody.prototype.getOptions = function() {
-  return {
-    'Examine Tombo': function (story) {
-      story.addStory('His lifeless body is mangled beyond repair. Poor Tombo.');
-    },
+  var options = {
     'Go back to the fire': function (story) {
       story.transitionScene('scene1', [
         'Jack makes his way back to the fire.'
@@ -68,8 +72,26 @@ SceneTombosBody.prototype.getOptions = function() {
       ]);
     }
   };
-};
 
+  if (this.tomboBeenExamined === false) {
+    options['Examine Tombo'] = function (story) {
+      this.tomboBeenExamined = true;
+      story.addStory('His lifeless body is mangled beyond repair. Poor Tombo.');
+    }.bind(this);
+  }
+
+  if (this.tomboBeenExamined === true &&
+      this.tomboBeenSearched === false
+  ) {
+    options['Search Tombo'] = function (story) {
+      story.addItem("miniature telephone");
+      this.tomboBeenSearched = true;
+      story.addStory("Jack finds a miniature piano in Tombo's trouser pocket. How strange.");
+    }.bind(this);
+  }
+
+  return options;
+};
 
 // TODO: Rename story?
 function Scenes () {

@@ -16,7 +16,9 @@ function Story(options) {
   // The time that the scene started.
   // Used to display hints after a certain time.
   this.sceneStartTime = null;
-  this.hintTimers = [];
+
+  // The player items.
+  this.items = [];
 }
 
 Story.prototype.getScene = function() {
@@ -123,4 +125,8 @@ Story.prototype.handleInput = function(input) {
 Story.prototype.showHint = function(hint) {
   console.log('showing hint', hint);
   this.addStory(hint);
+};
+
+Story.prototype.addItem = function(item) {
+  this.items.push(item);
 };
