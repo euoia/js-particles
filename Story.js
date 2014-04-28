@@ -5,15 +5,18 @@ function Story(options) {
   this.sceneId = this.scenes.firstScene;
 
   // The delay between each line of story.
-  this.storyDelay = 500;
+  this.storyDelay = options.storyDelay;
 
-  // Functions which write to the display.
-  this.write = null;
-  this.writePrompt = null;
-  this.lockInput = null;
+  // Controls.
+  this.controls = null;
 
   // A function to call when finished writing the current story.
   this.end = null;
+
+  // The time that the scene started.
+  // Used to display hints after a certain time.
+  this.sceneStartTime = null;
+  this.hintTimers = [];
 }
 
 Story.prototype.getScene = function() {
@@ -22,6 +25,15 @@ Story.prototype.getScene = function() {
 
 Story.prototype.startScene = function() {
   this.addStory(this.getScene().intro);
+  this.sceneStartTime = Date.now();
+
+  var hints = this.getScene().hints;
+  for (var time in hints) {
+    this.hintTimers.push(
+      window.setTimeout(
+        this.showHint.bind(this, hints[time]),
+        time * 1000));
+  }
 };
 
 // Play some content then display the prompt..
@@ -30,21 +42,21 @@ Story.prototype.addStory = function(storyContent, cb) {
     storyContent = [storyContent];
   }
 
-  // No callback? Show the prompt.
+  // No callback? Show the prompt and options.
   if (cb === undefined) {
     cb = function() {
       window.setTimeout(this.showPrompt.bind(this), this.storyDelay);
     }.bind(this);
   }
 
-  this.lockInput();
+  this.controls.lockInput();
   this.playContent(storyContent, 0, cb);
 };
 
 // Play an array of content on a timer then call cb.
 Story.prototype.playContent = function(content, contentIdx, cb) {
   line = content.slice(contentIdx, contentIdx + 1);
-  this.write(line);
+  this.controls.write(line);
 
   contentIdx += 1;
 
@@ -58,10 +70,11 @@ Story.prototype.playContent = function(content, contentIdx, cb) {
 };
 
 Story.prototype.showPrompt = function() {
-    this.writePrompt(this.getScene().prompt);
-    if (typeof(this.end) === 'function') {
-      this.end();
-    }
+  this.controls.writePrompt(this.getScene().getPrompt());
+  this.controls.writeOptions(this.getScene().getOptions());
+  if (typeof(this.end) === 'function') {
+    this.end();
+  }
 };
 
 // Set the callback to play when the current story is done.
@@ -73,25 +86,33 @@ Story.prototype.done = function(endFn) {
   this.end = endFn;
 };
 
-Story.prototype.loadScene = function(scene) {
-  console.log('Loading scene', scene);
+Story.prototype.transitionScene = function(newSceneId, content) {
+  this.controls.closeCurtains(function () {
+    this.addStory(content, function () {
+      this.controls.openCurtains();
+      this.sceneId = newSceneId;
+      this.showPrompt();
+    }.bind(this));
+  }.bind(this));
 };
 
 Story.prototype.handleInput = function(input) {
   var scene = this.getScene();
-  var talkie = scene.talkies[input];
   var handled = false;
 
+  var talkie = scene.talkies[input];
   if (talkie !== undefined) {
     this.addStory(talkie);
 
     handled = true;
   }
 
-  var action = scene.actions[input];
+  var firstWord = input.split(' ')[0];
+  var action = scene.actions[firstWord];
   if (action !== undefined) {
-    action(this);
-    handled = true;
+    if (action(this, input) !== false) {
+      handled = true;
+    }
   }
 
   if (handled === false) {
@@ -99,3 +120,7 @@ Story.prototype.handleInput = function(input) {
   }
 };
 
+Story.prototype.showHint = function(hint) {
+  console.log('showing hint', hint);
+  this.addStory(hint);
+};

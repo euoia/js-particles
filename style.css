@@ -26,6 +26,11 @@ body {
 	width: 1292px;
 	height: 300px;
 	top: 150px;
+	padding: 0em;
+	overflow-y: scroll;
+}
+
+.content {
 	font-size: 1em;
 	padding: 1em;
 	padding-bottom: 2em;
@@ -39,4 +44,16 @@ input {
 	outline-width: 0;
 	font: 1em serif;
 	margin-left: 1em;
+}
+
+.option {
+	color: yellow;
+}
+
+.option:hover {
+	cursor: pointer;
+}
+
+li {
+	list-style: none;
 }

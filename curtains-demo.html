@@ -18,52 +18,24 @@
 		<script src="Story.js" type="text/javascript" charset="utf-8"></script>
 		<script src="Controls.js" type="text/javascript" charset="utf-8"></script>
 		<script src="Revealer.js" type="text/javascript" charset="utf-8"></script>
-		<script src="TextOverlay.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Revealer.js" type="text/javascript" charset="utf-8"></script>
 
 		<script src="lib/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="lib/underscore.js" type="text/javascript" charset="utf-8"></script>
 
 		<script type="text/javascript" charset="utf-8">
 			window.onload = function() {
-				p = new Particles({
-					screen: document.getElementById('screen'),
-					width: 1276,
-					height: 284
-				});
-
-				function start () {
-					sc = new Scenes();
-
-					// TODO: Perhaps rename Game.js.
-					s = new Story ({
-						scenes: sc,
-						storyDelay: 3000
-					});
-
-					c = new Controls ({
-						controls: document.getElementById('controls'),
-						story: s,
-						revealer: r
-					});
-				}
-
-				r = new Revealer({
+				var r = new Revealer({
 					screen: document.getElementById('screen'),
 					foreground: './curtains.jpg',
+					background: 'scene-1-the-fireside.jpg',
+					startDelay: 1000,
 					width: 1276,
 					height: 284,
-					revealTime: 3000,
-					startEvent: 'onclick',
-					drawComplete: function () {
-						t = new TextOverlay({
-							canvas: r.getForegroundCanvas(),
-							textTitle: 'Murder in the Mendip Hills',
-							textSubtitle: "click to begin"
-						});
-					},
-					revealComplete: start
+					revealTime: 3000
 				});
 
+				window.setTimeout(r.startCurtainClose.bind(r), 5000);
 			};
 		</script>
     </head>

@@ -1,35 +1,32 @@
 function Controls(options) {
   this.controls = options.controls;
   this.story = options.story;
+  this.revealer = options.revealer;
 
-  // TODO: Possibly just pass in the controls object.
-  this.story.write = this.write.bind(this);
-  this.story.writePrompt = this.writePrompt.bind(this);
-  this.story.lockInput = this.lockInput.bind(this);
+  this.content = document.createElement('div');
+  this.content.classList.add('content');
+  this.controls.appendChild(this.content);
 
+  this.story.controls = this;
   this.inputControl = null;
 
-  this.content = '';
-
   this.story.startScene();
-
 }
 
 Controls.prototype.write = function(content) {
   var p = document.createElement('p');
   p.innerHTML = content;
-  this.controls.appendChild(p);
-
+  this.content.appendChild(p);
   this.controls.scrollTop = 9999999;
 };
 
 Controls.prototype.writePrompt = function(promptText) {
   var p = document.createElement('p');
   p.innerHTML = promptText;
-  this.controls.appendChild(p);
-  this.addPrompt(p);
+  this.content.appendChild(p);
 };
 
+// DEPRECATED.
 Controls.prototype.addPrompt = function(element) {
   if (this.inputControl !== null) {
     // Unbind the old input.
@@ -56,4 +53,31 @@ Controls.prototype.lockInput = function() {
   if (this.inputControl !== null) {
     this.inputControl.readOnly = true;
   }
+};
+
+Controls.prototype.writeOptions = function(options) {
+  var ul = document.createElement('ul');
+  var li;
+
+  for (var option in options) {
+    li = document.createElement('li');
+    li.classList.add('option');
+    li.onclick = options[option].bind(null, this.story);
+
+    li.innerHTML = option;
+    ul.appendChild(li);
+  }
+
+  this.content.appendChild(ul);
+  this.controls.scrollTop = 9999999;
+};
+
+Controls.prototype.closeCurtains = function(cb) {
+  this.revealer.revealComplete = cb;
+  this.revealer.startCurtainClose();
+};
+
+Controls.prototype.openCurtains = function(cb) {
+  this.revealer.revealComplete = cb;
+  this.revealer.startCurtainReveal();
 };
