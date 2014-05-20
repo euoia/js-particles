@@ -1,4 +1,6 @@
 function Scene1 (options) {
+  this.timesStoked = 0;
+
   this.intro = [
     "It is April 17th in the Mendip Hills.",
     "A touch of frost remains in the air.",
@@ -9,11 +11,16 @@ function Scene1 (options) {
 }
 
 Scene1.prototype.getOptions = function() {
-  return {
+  var options = {
     'Explore to the north': this.explore,
-    'Stoke the fire': this.stoke,
     'Go into the house': this.goHouse
   };
+
+  if (this.timesStoked < 3) {
+    options['Stoke the fire'] = this.stoke.bind(this);
+  }
+
+  return options;
 };
 
 Scene1.prototype.getPrompt = function() {
@@ -30,7 +37,17 @@ Scene1.prototype.explore = function(story) {
 };
 
 Scene1.prototype.stoke = function(story) {
-  story.addStory("Jack stokes the fire. It crackles and sparks. It looks like it could last a while.");
+  this.timesStoked += 1;
+
+  thisStory = [];
+  thisStory.push("Jack stokes the fire. It crackles and sparks. It looks like it could last a while.");
+
+  if (this.timesStoked === 3) {
+    thisStory.push("The fire looks like it will burn for a while longer.");
+  }
+
+  // TODO: Allow addStory then addStory again.
+  story.addStory(thisStory);
 };
 
 Scene1.prototype.goHouse = function(story) {
@@ -84,7 +101,7 @@ SceneTombosBody.prototype.getOptions = function() {
       this.tomboBeenSearched === false
   ) {
     options['Search Tombo'] = function (story) {
-      story.addItem("miniature telephone");
+      story.addItem("miniature piano");
       this.tomboBeenSearched = true;
       story.addStory("Jack finds a miniature piano in Tombo's trouser pocket. How strange.");
     }.bind(this);
