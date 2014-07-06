@@ -10,60 +10,60 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-		<link rel="stylesheet" href="style.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
 
-		<script src="ImageLoader.js" type="text/javascript" charset="utf-8"></script>
-		<script src="Particles.js" type="text/javascript" charset="utf-8"></script>
-		<script src="Scenes.js" type="text/javascript" charset="utf-8"></script>
-		<script src="Story.js" type="text/javascript" charset="utf-8"></script>
-		<script src="Controls.js" type="text/javascript" charset="utf-8"></script>
-		<script src="Revealer.js" type="text/javascript" charset="utf-8"></script>
-		<script src="TextOverlay.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/ImageLoader.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/Particles.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/Game.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/Controls.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/Screen.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/TextOverlay.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/SceneManager.js" type="text/javascript" charset="utf-8"></script>
 
-		<script src="lib/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
-		<script src="lib/underscore.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scenes/SceneFireside.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scenes/SceneTombosBody.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scenes/SceneHouse.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="third-party-lib/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="third-party-lib/underscore.js" type="text/javascript" charset="utf-8"></script>
 
 		<script type="text/javascript" charset="utf-8">
 			window.onload = function() {
-				p = new Particles({
+				s = new Screen({
 					screen: document.getElementById('screen'),
-					width: 1276,
-					height: 284
-				});
-
-				function start () {
-					sc = new Scenes();
-
-					// TODO: Perhaps rename Game.js.
-					s = new Story ({
-						scenes: sc,
-						storyDelay: 3000
-					});
-
-					c = new Controls ({
-						controls: document.getElementById('controls'),
-						story: s,
-						revealer: r
-					});
-				}
-
-				r = new Revealer({
-					screen: document.getElementById('screen'),
-					foreground: './curtains.jpg',
+					foreground: './img/curtains.jpg',
 					width: 1276,
 					height: 284,
-					revealTime: 3000, // 3000
+					revealTime: 300,
 					startEvent: 'onclick',
-					drawComplete: function () {
-						t = new TextOverlay({
-							canvas: r.getForegroundCanvas(),
+					ready: function () {
+						new TextOverlay({
+							canvas: this.getForegroundCanvas(),
 							textTitle: 'Murder in the Mendip Hills',
 							textSubtitle: "click to begin"
 						});
-					},
-					revealComplete: start
+					}
 				});
 
+				sm = new SceneManager({
+					'scenes': {
+						fireside: new SceneFireside(),
+						tombosBody: new SceneTombosBody(),
+						house: new SceneHouse()
+					},
+					currentSceneId: 'fireside'
+				});
+
+				c = new Controls ({
+					controls: document.getElementById('controls')
+				});
+
+				g = new Game ({
+					sceneManager: sm,
+					controls: c,
+					screen: s,
+					storyDelay: 300
+				});
 			};
 		</script>
     </head>
