@@ -34,11 +34,11 @@
 					foreground: './img/curtains.jpg',
 					width: 1276,
 					height: 284,
-					revealTime: 300,
+					revealTime: 2000,
 					startEvent: 'onclick',
 					ready: function () {
 						new TextOverlay({
-							canvas: this.getForegroundCanvas(),
+							canvas: this.foregroundLayer,
 							textTitle: 'Murder in the Mendip Hills',
 							textSubtitle: "click to begin"
 						});
@@ -51,7 +51,7 @@
 						tombosBody: new SceneTombosBody(),
 						house: new SceneHouse()
 					},
-					currentSceneId: 'fireside'
+					sceneId: 'fireside'
 				});
 
 				c = new Controls ({
@@ -62,7 +62,7 @@
 					sceneManager: sm,
 					controls: c,
 					screen: s,
-					storyDelay: 300
+					storyDelay: 1000
 				});
 			};
 		</script>

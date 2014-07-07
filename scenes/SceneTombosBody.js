@@ -1,6 +1,8 @@
 function SceneTombosBody () {
   this.tomboBeenExamined = false;
   this.tomboBeenSearched = false;
+
+  this.image = './img/tombos-body.png';
 }
 
 SceneTombosBody.prototype.getPrompt = function() {
@@ -10,12 +12,12 @@ SceneTombosBody.prototype.getPrompt = function() {
 SceneTombosBody.prototype.getOptions = function() {
   var options = {
     'Go back to the fire': function (game) {
-      game.transitionScene('scene1', [
+      game.transitionScene('fireside', [
         'Jack makes his way back to the fire.'
       ]);
     },
     'Venture further into the woods': function (game) {
-      game.transitionScene('woods-wolf', [
+      game.transitionScene('woodsWolf', [
         'Jack makes his way towards the woods.',
         'The sound of wolves howling becomes close.',
         "A sharp pain strikes deep into Jack's left calf muscle.",
@@ -29,7 +31,7 @@ SceneTombosBody.prototype.getOptions = function() {
   if (this.tomboBeenExamined === false) {
     options['Examine Tombo'] = function (game) {
       this.tomboBeenExamined = true;
-      game.addgame('His lifeless body is mangled beyond repair. Poor Tombo.');
+      game.addStory('His lifeless body is mangled beyond repair. Poor Tombo.');
     }.bind(this);
   }
 
@@ -39,7 +41,7 @@ SceneTombosBody.prototype.getOptions = function() {
     options['Search Tombo'] = function (game) {
       game.addItem("miniature piano");
       this.tomboBeenSearched = true;
-      game.addgame("Jack finds a miniature piano in Tombo's trouser pocket. How strange.");
+      game.addStory("Jack finds a miniature piano in Tombo's trouser pocket. How strange.");
     }.bind(this);
   }
 

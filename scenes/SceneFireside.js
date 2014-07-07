@@ -9,7 +9,8 @@ function SceneFireside (options) {
     "A cold chill runs down Jack's spine."
   ];
 
-  this.image = './img/scene-1-the-fireside.png';
+  this.imageUrl = './img/scene-1-the-fireside.png';
+  this.particles = null;
 }
 
 SceneFireside.prototype.getOptions = function() {
@@ -30,7 +31,7 @@ SceneFireside.prototype.getPrompt = function() {
 };
 
 SceneFireside.prototype.explore = function(story) {
-  story.transitionScene('tombos-body', [
+  story.transitionScene('tombosBody', [
     "Jack hesistently wanders north towards Luver's Lane whence came the cry.",
     "Upon entering the field he discovers an awful sight.",
     "The bloodied and mangled corpse of Tombo.",
@@ -61,11 +62,16 @@ SceneFireside.prototype.goHouse = function(story) {
     ]);
 };
 
-SceneFireside.prototype.drawScene = function(story) {
-  p = new Particles({
-    screen: document.getElementById('screen'),
+SceneFireside.prototype.drawScene = function(screen) {
+  this.particles = new Particles({
+    context: screen.effectsLayerContext,
     width: 1276,
     height: 284,
-    backgroundImage: this.backgroundImage
+    backgroundImageUrl: this.imageUrl
   });
+};
+
+SceneFireside.prototype.destroyScene = function() {
+  this.particles.destroyed = true;
+  delete this.particles;
 };
