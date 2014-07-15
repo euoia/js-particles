@@ -19,10 +19,12 @@
 		<script src="lib/Screen.js" type="text/javascript" charset="utf-8"></script>
 		<script src="lib/TextOverlay.js" type="text/javascript" charset="utf-8"></script>
 		<script src="lib/SceneManager.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/FallingLeaf.js" type="text/javascript" charset="utf-8"></script>
 
 		<script src="scenes/SceneFireside.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scenes/SceneTombosBody.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scenes/SceneHouse.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scenes/SceneGameOver.js" type="text/javascript" charset="utf-8"></script>
 
 		<script src="third-party-lib/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
 		<script src="third-party-lib/underscore.js" type="text/javascript" charset="utf-8"></script>
@@ -34,8 +36,7 @@
 					foreground: './img/curtains.jpg',
 					width: 1276,
 					height: 284,
-					revealTime: 2000,
-					startEvent: 'onclick',
+					revealTime: 3000,
 					ready: function () {
 						new TextOverlay({
 							canvas: this.foregroundLayer,
@@ -49,7 +50,8 @@
 					'scenes': {
 						fireside: new SceneFireside(),
 						tombosBody: new SceneTombosBody(),
-						house: new SceneHouse()
+						house: new SceneHouse(),
+						gameOver: new SceneGameOver()
 					},
 					sceneId: 'fireside'
 				});
@@ -62,7 +64,7 @@
 					sceneManager: sm,
 					controls: c,
 					screen: s,
-					storyDelay: 1000
+					storyDelay: 2000
 				});
 			};
 		</script>

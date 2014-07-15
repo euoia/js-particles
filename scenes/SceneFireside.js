@@ -62,7 +62,7 @@ SceneFireside.prototype.goHouse = function(story) {
     ]);
 };
 
-SceneFireside.prototype.drawScene = function(screen) {
+SceneFireside.prototype.curtainsClosed = function(screen) {
   this.particles = new Particles({
     context: screen.effectsLayerContext,
     width: 1276,

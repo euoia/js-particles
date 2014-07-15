@@ -2,7 +2,7 @@ function SceneTombosBody () {
   this.tomboBeenExamined = false;
   this.tomboBeenSearched = false;
 
-  this.image = './img/tombos-body.png';
+  this.imageUrl = './img/tombos-body.png';
 }
 
 SceneTombosBody.prototype.getPrompt = function() {
@@ -17,7 +17,7 @@ SceneTombosBody.prototype.getOptions = function() {
       ]);
     },
     'Venture further into the woods': function (game) {
-      game.transitionScene('woodsWolf', [
+      game.transitionScene('gameOver', [
         'Jack makes his way towards the woods.',
         'The sound of wolves howling becomes close.',
         "A sharp pain strikes deep into Jack's left calf muscle.",
