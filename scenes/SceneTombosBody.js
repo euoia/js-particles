@@ -16,7 +16,7 @@ SceneTombosBody.prototype.getOptions = function() {
         'Jack makes his way back to the fire.'
       ]);
     },
-    'Venture further into the woods': function (game) {
+    'Venture into the woods': function (game) {
       game.transitionScene('gameOver', [
         'Jack makes his way towards the woods.',
         'The sound of wolves howling becomes close.',

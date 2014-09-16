@@ -32,7 +32,7 @@ SceneFireside.prototype.getPrompt = function() {
 
 SceneFireside.prototype.explore = function(story) {
   story.transitionScene('tombosBody', [
-    "Jack hesistently wanders north towards Luver's Lane whence came the cry.",
+    "Jack wanders hesistently north towards Luver's Lane whence came the cry.",
     "Upon entering the field he discovers an awful sight.",
     "The bloodied and mangled corpse of Tombo.",
     "Tombo has been mauled by a creature. Probably a wolf."
