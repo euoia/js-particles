@@ -1,12 +1,13 @@
-function SceneTombosBody () {
+'use strict';
+var SceneTombosBody = module.exports = function () {
   this.tomboBeenExamined = false;
   this.tomboBeenSearched = false;
 
   this.imageUrl = './img/tombos-body.png';
-}
+};
 
 SceneTombosBody.prototype.getPrompt = function() {
-  return "Tombo's body is lying there. What will Jack do?";
+  return 'Tombo\'s body is lying there. What will Jack do?';
 };
 
 SceneTombosBody.prototype.getOptions = function() {
@@ -20,7 +21,7 @@ SceneTombosBody.prototype.getOptions = function() {
       game.transitionScene('gameOver', [
         'Jack makes his way towards the woods.',
         'The sound of wolves howling becomes close.',
-        "A sharp pain strikes deep into Jack's left calf muscle.",
+        'A sharp pain strikes deep into Jack\'s left calf muscle.',
         'It feels wet.',
         'Everything becomes dark.',
         'Jack is dead.'
@@ -39,9 +40,9 @@ SceneTombosBody.prototype.getOptions = function() {
       this.tomboBeenSearched === false
   ) {
     options['Search Tombo'] = function (game) {
-      game.addItem("miniature piano");
+      game.addItem('miniature piano');
       this.tomboBeenSearched = true;
-      game.addStory("Jack finds a miniature piano in Tombo's trouser pocket. How strange.");
+      game.addStory('Jack finds a miniature piano in Tombo\'s trouser pocket. How strange.');
     }.bind(this);
   }
 

@@ -1,3 +1,2 @@
-function SceneHouse () {
-}
-
+var SceneHouse = module.exports = function() {
+};

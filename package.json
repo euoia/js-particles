@@ -1,0 +1,26 @@
+{
+  "name": "js-particles",
+  "version": "0.1.0",
+  "description": "js-particles: A code name for another project.",
+  "main": "app.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/euoia/js-particles.git"
+  },
+  "author": "James Pickard <james.pickard@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/euoia/js-particles/issues"
+  },
+  "homepage": "https://github.com/euoia/js-particles",
+  "dependencies": {
+    "jquery": "^2.1.1",
+    "underscore": "^1.7.0"
+  }
+}

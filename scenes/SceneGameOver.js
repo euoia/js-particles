@@ -1,7 +1,11 @@
-function SceneGameOver (options) {
+'use strict';
+var FallingLeaf = require('../lib/FallingLeaf'),
+  _ = require('underscore');
+
+var SceneGameOver = module.exports = function () {
   this.imageUrl = './img/death-scene.jpg';
   this.fallingLeaf = null;
-}
+};
 
 SceneGameOver.prototype.getPrompt = function() {
   return 'Jack is dead. There is nothing left.';
@@ -9,14 +13,14 @@ SceneGameOver.prototype.getPrompt = function() {
 
 SceneGameOver.prototype.getOptions = function() {
   return {
-    'Start again': function(story) {
+    'Start again': function() {
       location.reload();
     }
   };
 };
 
 SceneGameOver.prototype.curtainsOpenStart = function(screen) {
-  new FallingLeaf({
+  var f = new FallingLeaf({
     imageUrl: './img/leaf.png',
     shadowUrl: './img/leaf-shadow.png',
     context: screen.effectsLayerContext,
@@ -26,6 +30,8 @@ SceneGameOver.prototype.curtainsOpenStart = function(screen) {
     width: screen.width,
     height: screen.height
   });
+
+  f.render();
 };
 
 SceneGameOver.prototype.destroyScene = function() {
